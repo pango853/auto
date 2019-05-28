@@ -11,6 +11,21 @@
   sudo: yes
   vars:
     password: xxxx
+  tasks:
+    - debug: msg="hostname: {{ inventory_hostname }}"
+
+- hosts: server
+  sudo: yes
   #tasks:
-  #  - name: add a new user
-  #    user: name=hoge password={{password}} state=present
+  #  - name: hello
+  #    user: 
+
+
+#> wget https://github.com/prometheus/prometheus/releases/download/v2.10.0/prometheus-2.10.0.linux-amd64.tar.gz
+#> tar zxvf prometheus-2.10.0.linux-amd64.tar.gz
+#> mv prometheus-2.10.0.linux-amd64 promethus-server
+#> cd promethus-server
+#> cp prometheus.yml prometheus.yml.org
+
+
+
