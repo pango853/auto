@@ -1,31 +1,75 @@
 ---
 
+# HOW-TO:
+# cp inventory/prometheus-EXAMPLE inventory/prometheus
+# vim inventory/prometheus
+
 # ansible -i hosts 127.0.0.1 -m ping
 # ansible -i inventory/prometheus 192.168.1.1 -m ping
 
 # ansible-playbook play-prometheus.yml -i inventory/prometheus
-# ansible-playbook play-prometheus.yml -i 192.168.1.1
-# ansible-playbook play-prometheus.yml -k -c MyPassword
 
 - hosts: all
-  sudo: yes
-  vars:
-    password: xxxx
+  become: yes
   tasks:
-    - debug: msg="hostname: {{ inventory_hostname }}"
+    - debug: msg="Hello, {{ inventory_hostname }}."
 
-- hosts: server
-  sudo: yes
-  #tasks:
-  #  - name: hello
-  #    user: 
+- hosts: prometheus
+  become: yes
+  vars_files:
+    - vars/prometheus.yml
+  vars:
+    prom_path: ~/prometheus.tar.gz
+    install_dir: /usr/local/src/prometheus/prometheus
+  tasks:
+    - name: Download tarball
+      get_url: url={{ prom_url }} checksum={{ prom_checksum }} dest={{ prom_path }} force=no
+      register: downloaded_tarball
+
+    - name: Find out if (re-)install is necessary
+      set_fact:
+        need_to_install: "{{ downloaded_tarball | changed }}"
+
+    - name: Clean up the installation directory
+      file: path={{ install_dir }} state=absent
+      when: need_to_install
+
+    - name: Prepare the installation directory
+      file: path={{ install_dir }} state=directory
+      when: need_to_install
+
+    - name: Unpack the tarball
+      command: tar -zxf {{ prom_path }} -C {{ install_dir }} --strip-components=1
+      when: need_to_install
 
 
-#> wget https://github.com/prometheus/prometheus/releases/download/v2.10.0/prometheus-2.10.0.linux-amd64.tar.gz
-#> tar zxvf prometheus-2.10.0.linux-amd64.tar.gz
-#> mv prometheus-2.10.0.linux-amd64 promethus-server
-#> cd promethus-server
-#> cp prometheus.yml prometheus.yml.org
+#TODO cp prometheus.yml prometheus.yml.org
 
 
 
+- hosts: node_exporter
+  become: yes
+  vars_files:
+    - vars/prometheus.yml
+  vars:
+    install_dir: /usr/local/src/prometheus/node_exporter
+  tasks:
+    - name: Download tarball
+      get_url: url={{ node_exporter_url }} checksum={{ node_exporter_checksum }} dest=~/ force=no
+      register: tarball
+
+    - name: Find out if (re-)install is necessary
+      set_fact:
+        need_to_install: "{{ tarball | changed }}"
+
+    - name: Clean up the installation directory
+      file: path={{ install_dir }} state=absent
+      when: need_to_install
+
+    - name: Prepare the installation directory
+      file: path={{ install_dir }} state=directory
+      when: need_to_install
+
+    - name: Unpack the tarball
+      command: tar -zxf {{ tarball.dest }} -C {{ install_dir }} --strip-components=1
+      when: need_to_install

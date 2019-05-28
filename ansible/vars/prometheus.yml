@@ -1,0 +1,7 @@
+---
+prom_url: https://github.com/prometheus/prometheus/releases/download/v2.10.0/prometheus-2.10.0.linux-amd64.tar.gz
+# @see https://api.github.com/repos/prometheus/prometheus/releases/17586712/assets, https://github.com/prometheus/prometheus/releases/download/v2.10.0/sha256sums.txt
+prom_checksum: sha256:f4233783826f18606b79e5cef0686e4a9c2030146a3c7ce134f0add09f5adcb7
+
+node_exporter_url: https://github.com/prometheus/node_exporter/releases/download/v0.18.0/node_exporter-0.18.0.linux-amd64.tar.gz
+node_exporter_checksum: sha256:1ebbc2b062b6c80a4802bc56ba04cb93b3486e8074bd25cc6887e44111f352c4
