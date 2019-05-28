@@ -1,0 +1,55 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# vagrant init hashicorp/precise64
+# vagrant up -provider=hyperv
+
+# REF: https://www.vagrantup.com/docs/hyperv/configuration.html
+
+Vagrant.configure("2") do |config|
+	config.vm.provider :hyperv # !!! Hardcoded HERE !!!
+
+	config.vm.define "master" do |subconfig|
+		subconfig.vm.box = "centos/7"
+		subconfig.vm.provider :hyperv do |provider|
+			#provider.vmname = "master"
+
+			provider.cpus = 1
+			provider.memory = 2048
+			provider.maxmemory = 2048
+		end
+		subconfig.vm.network :private_network, bridge: "nat"
+		#subconfig.vm.provision "docker"
+	end
+
+	config.vm.define "node1" do |subconfig|
+		subconfig.vm.box = "centos/7"
+		subconfig.vm.provider :hyperv do |provider|
+			#provider.vmname = "node1"
+
+			provider.cpus = 1
+			provider.memory = 2048
+			provider.maxmemory = 2048
+		end
+		subconfig.vm.network :private_network, bridge: "nat"
+		#subconfig.vm.provision "docker"
+	end
+end
+
+# config.vm.hostname
+# config.vm.box_url
+# config.vm.base_address
+
+#config.vm.network "public_network", bridge: "External Switch"
+#config.vm.network "private_network", bridge: "Internal Switch"
+
+# config.vm.network :private_network, ip: "ゲストOS側の割り当てたい任意のIPアドレス"
+# config.vm.provision :shell, :path => "{任意の名前}.sh"
+# config.vm.provision :shell, :inline => "echo hello"
+# config.vm.synced_folder "ホスト側のディレクトリ", "ゲスト側のディレクトリ"
+
+# config.vm.network
+# config.vm.network "forwarded_port", guest: 80, host: 8080
+# config.vm.network "private_network", type: "dhcp"
+# config.vm.network "private_network", ip: "192.168.50.4"
+# config.vm.network "public_network", bridge: "en1: Wi-Fi (AirPort)"

@@ -1,0 +1,11 @@
+Thumbs.db
+.DS_Store
+*~
+~*
+*.swp
+*.tmp
+
+.vagrant/
+
+*secret*
+*SECRET*

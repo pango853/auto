@@ -1,0 +1,16 @@
+---
+
+# ansible -i hosts 127.0.0.1 -m ping
+# ansible -i inventory/prometheus 192.168.1.1 -m ping
+
+# ansible-playbook play-prometheus.yml -i inventory/prometheus
+# ansible-playbook play-prometheus.yml -i 192.168.1.1
+# ansible-playbook play-prometheus.yml -k -c MyPassword
+
+- hosts: all
+  sudo: yes
+  vars:
+    password: xxxx
+  #tasks:
+  #  - name: add a new user
+  #    user: name=hoge password={{password}} state=present
