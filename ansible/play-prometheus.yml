@@ -42,6 +42,17 @@
       command: tar -zxf {{ prom_path }} -C {{ install_dir }} --strip-components=1
       when: need_to_install
 
+    - name: Copy service file
+      copy:
+        src: ./files/prometheus.service
+        dest: /lib/systemd/system/
+    - name: Enable and start service
+      systemd:
+        enabled: yes
+        state: started
+        name: prometheus
+
+
 
 #TODO cp prometheus.yml prometheus.yml.org
 
@@ -73,3 +84,15 @@
     - name: Unpack the tarball
       command: tar -zxf {{ tarball.dest }} -C {{ install_dir }} --strip-components=1
       when: need_to_install
+
+    - name: Copy service file
+      copy:
+        src: ./files/prometheus-node-exporter.service
+        dest: /lib/systemd/system/
+    - name: Enable and start service
+      systemd:
+        enabled: yes
+        state: started
+        name: prometheus-node-exporter
+
+
